@@ -24,7 +24,7 @@
 
 ## Quick Start
 
-**1. Get your API key** at [memory.studio.lyzr.ai](https://memory.studio.lyzr.ai)
+**1. Get your API key** at [studio.lyzr.ai](https://studio.lyzr.ai)
 
 **2. Install the plugin**
 
