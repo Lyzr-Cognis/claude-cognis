@@ -1,0 +1,13 @@
+{
+  "name": "claude-cognis",
+  "version": "1.0.0",
+  "description": "Persistent memory across Claude Code sessions using Cognis",
+  "author": {
+    "name": "Lyzr",
+    "email": "support@lyzr.ai"
+  },
+  "homepage": "https://github.com/LyzrCore/claude-cognis",
+  "repository": "https://github.com/LyzrCore/claude-cognis",
+  "license": "MIT",
+  "keywords": ["memory", "persistent", "cognis", "lyzr", "context"]
+}

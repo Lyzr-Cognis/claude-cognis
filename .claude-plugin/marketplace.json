@@ -1,0 +1,30 @@
+{
+  "name": "claude-cognis",
+  "description": "Persistent memory across Claude Code sessions using Cognis",
+  "owner": {
+    "name": "Lyzr",
+    "email": "support@lyzr.ai"
+  },
+  "metadata": {
+    "description": "Give Claude Code persistent memory across sessions. Remembers user preferences, architectural decisions, team knowledge, and past work."
+  },
+  "plugins": [
+    {
+      "name": "claude-cognis",
+      "description": "Persistent memory across Claude Code sessions using Cognis",
+      "version": "1.0.0",
+      "author": {
+        "name": "Lyzr",
+        "email": "support@lyzr.ai"
+      },
+      "source": "./plugin",
+      "homepage": "https://github.com/LyzrCore/claude-cognis",
+      "repository": "https://github.com/LyzrCore/claude-cognis",
+      "license": "MIT",
+      "category": "productivity",
+      "keywords": ["memory", "persistent", "cognis", "lyzr", "context"],
+      "tags": ["memory", "productivity", "context", "persistent-memory"],
+      "strict": false
+    }
+  ]
+}
