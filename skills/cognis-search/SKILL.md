@@ -1,6 +1,7 @@
 ---
 name: cognis-search
 description: Search your memory for past work, previous sessions, architectural decisions, and team knowledge stored in Cognis.
+version: 1.0.0
 ---
 
 # Cognis Memory Search

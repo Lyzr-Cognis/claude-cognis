@@ -1,6 +1,7 @@
 ---
 name: index
 description: Index the current codebase and save a summary to Cognis memory for future reference.
+allowed-tools: ["Bash", "Read", "Glob", "Grep"]
 ---
 
 # Codebase Indexing

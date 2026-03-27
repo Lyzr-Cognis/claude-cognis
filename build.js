@@ -2,8 +2,8 @@ const esbuild = require("esbuild");
 const path = require("path");
 const fs = require("fs");
 
-const SRC_DIR = path.join(__dirname, "..", "src");
-const OUT_DIR = path.join(__dirname, "..", "plugin", "scripts");
+const SRC_DIR = path.join(__dirname, "src");
+const OUT_DIR = path.join(__dirname, "scripts");
 
 // Each top-level .js in src/ becomes an entry point
 const entryPoints = fs

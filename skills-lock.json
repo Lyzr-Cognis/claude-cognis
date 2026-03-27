@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "skills": {
+    "cognis": {
+      "source": "Lyzr-Cognis/cognis-skills",
+      "sourceType": "github",
+      "computedHash": "daf06b392abc12e80c3c3cf848222ea90d19d5783a7e02113e476f8766ee2c8a"
+    },
+    "cognis-skills": {
+      "source": "Lyzr-Cognis/cognis-skills",
+      "sourceType": "github",
+      "computedHash": "914b4a19775260594b6dfa6a860274208bbd0e59289b1a38614a650bce12f603"
+    }
+  }
+}

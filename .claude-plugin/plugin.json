@@ -9,5 +9,5 @@
   "homepage": "https://github.com/LyzrCore/claude-cognis",
   "repository": "https://github.com/LyzrCore/claude-cognis",
   "license": "MIT",
-  "keywords": ["memory", "persistent", "cognis", "lyzr", "context"]
+  "keywords": ["memory", "persistent", "cognis", "lyzr", "context", "session", "recall", "knowledge", "team", "history"]
 }

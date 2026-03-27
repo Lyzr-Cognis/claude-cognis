@@ -1,6 +1,7 @@
 ---
 name: project-config
 description: Configure Cognis settings for the current project (.claude/.cognis-claude/config.json).
+allowed-tools: ["Read", "Write"]
 ---
 
 # Project Configuration

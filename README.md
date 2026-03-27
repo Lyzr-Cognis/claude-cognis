@@ -5,7 +5,7 @@
 <h3 align="center">Give Claude Code a memory that never forgets</h3>
 
 <p align="center">
-  <img alt="npm version" src="https://img.shields.io/badge/npm-0.0.1-BA998C?style=flat-square" />
+  <img alt="version" src="https://img.shields.io/badge/version-1.0.0-BA998C?style=flat-square" />
   <img alt="license" src="https://img.shields.io/badge/license-MIT-5E403E?style=flat-square" />
   <img alt="node" src="https://img.shields.io/badge/node-%3E%3D18-27272A?style=flat-square" />
   <img alt="Claude Code Plugin" src="https://img.shields.io/badge/Claude_Code-Plugin-D4A574?style=flat-square" />
@@ -29,7 +29,7 @@
 **2. Install the plugin**
 
 ```bash
-claude plugin add /path/to/claude-cognis/plugin
+claude plugin add /path/to/claude-cognis
 ```
 
 **3. Set your API key**
@@ -127,11 +127,22 @@ When you search memories, both scopes are queried by default so you get the full
 | `COGNIS_OWNER_ID` | System username | Override owner identifier |
 | `COGNIS_ISOLATE_WORKTREES` | `false` | Treat git worktrees as separate projects |
 
+## Privacy & Data
+
+Cognis sends data to the Cognis API (`memory.studio.lyzr.ai`) to store and retrieve memories. Here's what you should know:
+
+- **No data is sent without an API key.** If `LYZR_API_KEY` is not set, both hooks exit immediately and no network requests are made.
+- **SessionStart hook** sends search queries to retrieve your previously stored memories. No conversation data is sent during this step.
+- **Stop hook** sends a compressed summary of your session transcript so it can be recalled in future sessions. Raw transcripts are not stored — only summaries.
+- **All data is scoped** to your owner ID and agent ID. Personal memories are private to you; team memories are shared by repository name.
+- **You control what's saved.** Use `signalExtraction: true` in your project config to only capture turns containing specific keywords, rather than the full session.
+- **You can delete your data** at any time using the `delete_memory` or `delete_all_memories` MCP tools.
+
 ## Development
 
 ```bash
 npm install        # Install dependencies
-npm run build      # Bundle src/ → plugin/scripts/
+npm run build      # Bundle src/ → scripts/
 npm run lint       # Check with Biome
 npm run lint:fix   # Auto-fix lint issues
 npm run format     # Format with Biome

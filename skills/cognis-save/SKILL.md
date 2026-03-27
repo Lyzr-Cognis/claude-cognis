@@ -1,6 +1,7 @@
 ---
 name: cognis-save
 description: Save important information, architectural decisions, patterns, or project knowledge to Cognis persistent memory.
+version: 1.0.0
 ---
 
 # Save to Cognis Memory

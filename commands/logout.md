@@ -1,6 +1,7 @@
 ---
 name: logout
 description: Remove stored Cognis API credentials from global settings.
+allowed-tools: ["Read", "Write"]
 ---
 
 # Logout / Clear Credentials
