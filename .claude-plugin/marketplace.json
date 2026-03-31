@@ -1,12 +1,11 @@
 {
-  "name": "claude-cognis",
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "cognis-plugins",
+  "version": "1.0.0",
   "description": "Persistent memory across Claude Code sessions using Cognis",
   "owner": {
     "name": "Lyzr",
     "email": "support@lyzr.ai"
-  },
-  "metadata": {
-    "description": "Give Claude Code persistent memory across sessions. Remembers user preferences, architectural decisions, team knowledge, and past work."
   },
   "plugins": [
     {
@@ -17,14 +16,8 @@
         "name": "Lyzr",
         "email": "support@lyzr.ai"
       },
-      "source": ".",
-      "homepage": "https://github.com/LyzrCore/claude-cognis",
-      "repository": "https://github.com/LyzrCore/claude-cognis",
-      "license": "MIT",
-      "category": "productivity",
-      "keywords": ["memory", "persistent", "cognis", "lyzr", "context"],
-      "tags": ["memory", "productivity", "context", "persistent-memory"],
-      "strict": false
+      "source": "./",
+      "category": "productivity"
     }
   ]
 }
