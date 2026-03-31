@@ -28,14 +28,23 @@
 
 **2. Install the plugin**
 
-```bash
-claude plugin add /path/to/claude-cognis
+In Claude Code, run:
+
+```
+/plugin marketplace add Lyzr-Cognis/claude-cognis
+/plugin install claude-cognis
 ```
 
 **3. Set your API key**
 
 ```bash
 export LYZR_API_KEY="your-api-key"
+```
+
+Or save it permanently in `~/.cognis-claude/settings.json`:
+
+```json
+{ "apiKey": "your-api-key" }
 ```
 
 That's it. Cognis will automatically load memories when you start a session and save them when you stop.
