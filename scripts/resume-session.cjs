@@ -415,139 +415,77 @@ var require_scoping = __commonJS({
       const gitRoot = getGitRoot(cwd);
       return `claudecode_${sha256(gitRoot || cwd)}`;
     }
-    function getRepoAgentId2(cwd, settings = {}) {
+    function getRepoAgentId(cwd, settings = {}) {
       if (settings.repoAgentId) return settings.repoAgentId;
       const repoName = getGitRepoName(cwd) || path.basename(cwd);
       return `repo_${sanitize(repoName)}`;
     }
-    function getProjectName(cwd) {
+    function getProjectName2(cwd) {
       const repoName = getGitRepoName(cwd);
       if (repoName) return repoName;
       const gitRoot = getGitRoot(cwd);
       return path.basename(gitRoot || cwd);
     }
-    module2.exports = { getOwnerId: getOwnerId2, getAgentId: getAgentId2, getRepoAgentId: getRepoAgentId2, getProjectName, sha256, sanitize };
+    module2.exports = { getOwnerId: getOwnerId2, getAgentId: getAgentId2, getRepoAgentId, getProjectName: getProjectName2, sha256, sanitize };
   }
 });
 
-// src/lib/format-context.js
-var require_format_context = __commonJS({
-  "src/lib/format-context.js"(exports2, module2) {
-    function formatMemoryResults(memories, label) {
-      if (!memories || !memories.length) return "";
-      const items = memories.map((m, i) => {
-        const content = m.memory || m.content || m.text || JSON.stringify(m);
-        return `${i + 1}. ${content}`;
-      }).join("\n");
-      return `### ${label}
-${items}`;
-    }
-    function formatContext(personalMemories, teamMemories, projectName) {
-      const sections = [];
-      if (personalMemories && personalMemories.length) {
-        sections.push(formatMemoryResults(personalMemories, "Your Previous Work"));
-      }
-      if (teamMemories && teamMemories.length) {
-        sections.push(formatMemoryResults(teamMemories, "Team Knowledge"));
-      }
-      if (!sections.length) {
-        return `<cognis-context>
-No previous memories found for project "${projectName}". This appears to be a new session.
-</cognis-context>`;
-      }
-      return `<cognis-context>
-## Memories for "${projectName}"
-
-${sections.join("\n\n")}
-
----
-IMPORTANT: These memories were loaded from the user's Cognis memory store at session start. Use them to answer questions about the user (name, role, preferences, past work) WITHOUT making additional tool calls. Only use search_memories or other MCP tools if the user explicitly asks for something not covered here.
-</cognis-context>`;
-    }
-    function formatSearchResults2(results, query) {
-      if (!results || !results.length) {
-        return `No memories found for query: "${query}"`;
-      }
-      const items = results.map((m, i) => {
-        const content = m.memory || m.content || m.text || JSON.stringify(m);
-        const score = m.score ? ` (relevance: ${(m.score * 100).toFixed(0)}%)` : "";
-        return `${i + 1}. ${content}${score}`;
-      }).join("\n");
-      return `Found ${results.length} memories for "${query}":
-
-${items}`;
-    }
-    module2.exports = { formatContext, formatSearchResults: formatSearchResults2, formatMemoryResults };
-  }
-});
-
-// src/search-memory.js
+// src/resume-session.js
 var { loadMergedSettings, getApiKey } = require_settings();
 var { CognisClient } = require_cognis_client();
-var { getOwnerId, getAgentId, getRepoAgentId } = require_scoping();
-var { formatSearchResults } = require_format_context();
+var { getOwnerId, getAgentId, getProjectName } = require_scoping();
 async function main() {
-  const args = process.argv.slice(2);
-  let mode = "both";
-  let query = "";
-  for (const arg of args) {
-    if (arg === "--user") mode = "user";
-    else if (arg === "--repo") mode = "repo";
-    else if (arg === "--both") mode = "both";
-    else query += (query ? " " : "") + arg;
-  }
-  if (!query) {
-    console.error("Usage: search-memory [--user|--repo|--both] <query>");
-    process.exit(1);
-  }
   const cwd = process.cwd();
   const settings = loadMergedSettings(cwd);
   const apiKey = getApiKey(settings, cwd);
   if (!apiKey) {
-    console.error(
-      "No API key configured. Run /claude-cognis:project-config or set LYZR_API_KEY."
-    );
+    console.error("No API key configured. Run /claude-cognis:project-config or set LYZR_API_KEY.");
     process.exit(1);
   }
   const client = new CognisClient(apiKey);
   const ownerId = getOwnerId(settings);
   const agentId = getAgentId(cwd, settings);
-  const repoAgentId = getRepoAgentId(cwd, settings);
-  const limit = settings.maxMemoryItems || 5;
-  const results = [];
-  if (mode === "user" || mode === "both") {
-    try {
-      const res = await client.search(query, { ownerId, agentId, limit });
-      const memories = res.memories || res.results || res.data || [];
-      if (Array.isArray(memories) && memories.length) {
-        results.push(`## Personal Memories
-${formatSearchResults(memories, query)}`);
-      }
-    } catch (err) {
-      results.push(`## Personal Memories
-Error: ${err.message}`);
+  const projectName = getProjectName(cwd);
+  const output = [];
+  try {
+    const summaries = await client.searchSummaries(ownerId, "", { limit: 1 });
+    const items = summaries.summaries || summaries.results || summaries.data || [];
+    if (Array.isArray(items) && items.length > 0) {
+      const last = items[0];
+      const date = last.created_at || last.timestamp || "";
+      output.push("## Last Session Summary");
+      if (date) output.push(`Date: ${date}`);
+      output.push("");
+      output.push(last.content || last.summary || "No summary content available.");
+    } else {
+      output.push("No previous sessions found for this project.");
+      console.log(output.join("\n"));
+      return;
     }
+  } catch (err) {
+    output.push(`Failed to load session summary: ${err.message}`);
   }
-  if (mode === "repo" || mode === "both") {
-    try {
-      const res = await client.search(query, { agentId: repoAgentId, limit });
-      const memories = res.memories || res.results || res.data || [];
-      if (Array.isArray(memories) && memories.length) {
-        results.push(`## Team Memories
-${formatSearchResults(memories, query)}`);
+  output.push("");
+  try {
+    const query = projectName ? `recent work on ${projectName}` : "recent work session";
+    const res = await client.search(query, { ownerId, agentId, limit: 3 });
+    const memories = res.memories || res.results || res.data || [];
+    if (Array.isArray(memories) && memories.length > 0) {
+      output.push("## Recent Memories");
+      for (const m of memories) {
+        const content = m.content || m.memory || m.text || "";
+        if (content) {
+          const preview = content.length > 300 ? `${content.slice(0, 297)}...` : content;
+          output.push(`- ${preview}`);
+        }
       }
-    } catch (err) {
-      results.push(`## Team Memories
-Error: ${err.message}`);
     }
+  } catch (err) {
+    output.push(`Failed to load recent memories: ${err.message}`);
   }
-  if (results.length) {
-    console.log(results.join("\n\n"));
-  } else {
-    console.log(`No memories found for: "${query}"`);
-  }
+  console.log(output.join("\n"));
 }
 main().catch((err) => {
-  console.error("Search failed:", err.message);
+  console.error("Resume error:", err.message);
   process.exit(1);
 });

@@ -13,7 +13,10 @@ const DEFAULT_BASE_URL = "https://memory.studio.lyzr.ai";
 class CognisClient {
 	constructor(apiKey, baseUrl) {
 		if (!apiKey) throw new Error("CognisClient requires an API key");
-		this.apiKey = apiKey;
+		if (typeof apiKey !== "string" || apiKey.trim().length < 8) {
+			throw new Error("Invalid API key format — key must be at least 8 characters");
+		}
+		this.apiKey = apiKey.trim();
 		this.baseUrl = (baseUrl || process.env.COGNIS_API_URL || DEFAULT_BASE_URL).replace(
 			/\/$/,
 			"",

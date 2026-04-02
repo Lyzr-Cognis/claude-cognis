@@ -4,7 +4,7 @@
  */
 
 const fs = require("fs");
-const { compressMessage } = require("./compress");
+const { compressMessage, compressToolUse } = require("./compress");
 
 const COGNIS_TAG_RE = /<\/?cognis-context[^>]*>/g;
 
@@ -103,10 +103,44 @@ function formatTranscript(messages, { signalExtraction, signalKeywords, signalTu
 
 	const formatted = [];
 
-	for (const msg of processed) {
-		const compressed = compressMessage(msg);
-		let text = getMessageText(compressed);
+	// Track pending tool uses from assistant messages so we can
+	// apply tool-aware compression on the corresponding results.
+	const pendingTools = new Map(); // tool_use_id → { toolName, toolInput }
 
+	for (const msg of processed) {
+		// Track tool_use blocks from assistant messages
+		if (msg.role === "assistant" && Array.isArray(msg.content)) {
+			for (const block of msg.content) {
+				if (block.type === "tool_use" && block.id) {
+					pendingTools.set(block.id, {
+						toolName: block.name || "Unknown",
+						toolInput: block.input || {},
+					});
+				}
+			}
+		}
+
+		// Apply tool-aware compression to tool results
+		let compressed;
+		if (msg.role === "user" && Array.isArray(msg.content)) {
+			const newContent = msg.content.map((block) => {
+				if (block.type === "tool_result" && block.tool_use_id) {
+					const meta = pendingTools.get(block.tool_use_id);
+					if (meta && typeof block.content === "string") {
+						return {
+							...block,
+							content: compressToolUse(meta.toolName, meta.toolInput, block.content),
+						};
+					}
+				}
+				return block;
+			});
+			compressed = { ...msg, content: newContent };
+		} else {
+			compressed = compressMessage(msg);
+		}
+
+		let text = getMessageText(compressed);
 		if (!text) continue;
 
 		// Clean cognis context tags

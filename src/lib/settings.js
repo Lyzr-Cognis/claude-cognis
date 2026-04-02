@@ -30,6 +30,11 @@ const DEFAULT_SETTINGS = {
 		"todo",
 		"caveat",
 		"workaround",
+		"implementation",
+		"refactor",
+		"solution",
+		"design",
+		"tradeoff",
 	],
 	signalTurnsBefore: 3,
 };

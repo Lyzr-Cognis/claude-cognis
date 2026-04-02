@@ -420,134 +420,77 @@ var require_scoping = __commonJS({
       const repoName = getGitRepoName(cwd) || path.basename(cwd);
       return `repo_${sanitize(repoName)}`;
     }
-    function getProjectName(cwd) {
+    function getProjectName2(cwd) {
       const repoName = getGitRepoName(cwd);
       if (repoName) return repoName;
       const gitRoot = getGitRoot(cwd);
       return path.basename(gitRoot || cwd);
     }
-    module2.exports = { getOwnerId: getOwnerId2, getAgentId: getAgentId2, getRepoAgentId: getRepoAgentId2, getProjectName, sha256, sanitize };
+    module2.exports = { getOwnerId: getOwnerId2, getAgentId: getAgentId2, getRepoAgentId: getRepoAgentId2, getProjectName: getProjectName2, sha256, sanitize };
   }
 });
 
-// src/lib/format-context.js
-var require_format_context = __commonJS({
-  "src/lib/format-context.js"(exports2, module2) {
-    function formatMemoryResults(memories, label) {
-      if (!memories || !memories.length) return "";
-      const items = memories.map((m, i) => {
-        const content = m.memory || m.content || m.text || JSON.stringify(m);
-        return `${i + 1}. ${content}`;
-      }).join("\n");
-      return `### ${label}
-${items}`;
-    }
-    function formatContext(personalMemories, teamMemories, projectName) {
-      const sections = [];
-      if (personalMemories && personalMemories.length) {
-        sections.push(formatMemoryResults(personalMemories, "Your Previous Work"));
-      }
-      if (teamMemories && teamMemories.length) {
-        sections.push(formatMemoryResults(teamMemories, "Team Knowledge"));
-      }
-      if (!sections.length) {
-        return `<cognis-context>
-No previous memories found for project "${projectName}". This appears to be a new session.
-</cognis-context>`;
-      }
-      return `<cognis-context>
-## Memories for "${projectName}"
-
-${sections.join("\n\n")}
-
----
-IMPORTANT: These memories were loaded from the user's Cognis memory store at session start. Use them to answer questions about the user (name, role, preferences, past work) WITHOUT making additional tool calls. Only use search_memories or other MCP tools if the user explicitly asks for something not covered here.
-</cognis-context>`;
-    }
-    function formatSearchResults2(results, query) {
-      if (!results || !results.length) {
-        return `No memories found for query: "${query}"`;
-      }
-      const items = results.map((m, i) => {
-        const content = m.memory || m.content || m.text || JSON.stringify(m);
-        const score = m.score ? ` (relevance: ${(m.score * 100).toFixed(0)}%)` : "";
-        return `${i + 1}. ${content}${score}`;
-      }).join("\n");
-      return `Found ${results.length} memories for "${query}":
-
-${items}`;
-    }
-    module2.exports = { formatContext, formatSearchResults: formatSearchResults2, formatMemoryResults };
-  }
-});
-
-// src/search-memory.js
+// src/stats.js
 var { loadMergedSettings, getApiKey } = require_settings();
 var { CognisClient } = require_cognis_client();
-var { getOwnerId, getAgentId, getRepoAgentId } = require_scoping();
-var { formatSearchResults } = require_format_context();
+var { getOwnerId, getAgentId, getRepoAgentId, getProjectName } = require_scoping();
 async function main() {
-  const args = process.argv.slice(2);
-  let mode = "both";
-  let query = "";
-  for (const arg of args) {
-    if (arg === "--user") mode = "user";
-    else if (arg === "--repo") mode = "repo";
-    else if (arg === "--both") mode = "both";
-    else query += (query ? " " : "") + arg;
-  }
-  if (!query) {
-    console.error("Usage: search-memory [--user|--repo|--both] <query>");
-    process.exit(1);
-  }
   const cwd = process.cwd();
   const settings = loadMergedSettings(cwd);
   const apiKey = getApiKey(settings, cwd);
   if (!apiKey) {
-    console.error(
-      "No API key configured. Run /claude-cognis:project-config or set LYZR_API_KEY."
-    );
+    console.error("No API key configured. Run /claude-cognis:project-config or set LYZR_API_KEY.");
     process.exit(1);
   }
   const client = new CognisClient(apiKey);
   const ownerId = getOwnerId(settings);
   const agentId = getAgentId(cwd, settings);
   const repoAgentId = getRepoAgentId(cwd, settings);
-  const limit = settings.maxMemoryItems || 5;
+  const projectName = getProjectName(cwd);
   const results = [];
-  if (mode === "user" || mode === "both") {
-    try {
-      const res = await client.search(query, { ownerId, agentId, limit });
-      const memories = res.memories || res.results || res.data || [];
-      if (Array.isArray(memories) && memories.length) {
-        results.push(`## Personal Memories
-${formatSearchResults(memories, query)}`);
+  results.push(`# Cognis Memory Stats`);
+  results.push(`Project: ${projectName || "unknown"}`);
+  results.push("");
+  try {
+    const personal = await client.getMemories({ ownerId, agentId, limit: 100 });
+    const memories = personal.memories || personal.results || personal.data || [];
+    const count = Array.isArray(memories) ? memories.length : 0;
+    results.push(`Personal memories: ${count}`);
+  } catch (err) {
+    results.push(`Personal memories: error (${err.message})`);
+  }
+  try {
+    const team = await client.getMemories({ agentId: repoAgentId, limit: 100 });
+    const memories = team.memories || team.results || team.data || [];
+    const count = Array.isArray(memories) ? memories.length : 0;
+    results.push(`Team memories: ${count}`);
+  } catch (err) {
+    results.push(`Team memories: error (${err.message})`);
+  }
+  results.push("");
+  try {
+    const summaries = await client.searchSummaries(ownerId, "", { limit: 5 });
+    const items = summaries.summaries || summaries.results || summaries.data || [];
+    if (Array.isArray(items) && items.length > 0) {
+      results.push("Recent sessions:");
+      for (const s of items) {
+        const date = s.created_at || s.timestamp || "unknown date";
+        const preview = (s.content || s.summary || "").slice(0, 80);
+        results.push(`  - ${date}: ${preview}`);
       }
-    } catch (err) {
-      results.push(`## Personal Memories
-Error: ${err.message}`);
+    } else {
+      results.push("Recent sessions: none found");
     }
+  } catch (err) {
+    results.push(`Recent sessions: error (${err.message})`);
   }
-  if (mode === "repo" || mode === "both") {
-    try {
-      const res = await client.search(query, { agentId: repoAgentId, limit });
-      const memories = res.memories || res.results || res.data || [];
-      if (Array.isArray(memories) && memories.length) {
-        results.push(`## Team Memories
-${formatSearchResults(memories, query)}`);
-      }
-    } catch (err) {
-      results.push(`## Team Memories
-Error: ${err.message}`);
-    }
-  }
-  if (results.length) {
-    console.log(results.join("\n\n"));
-  } else {
-    console.log(`No memories found for: "${query}"`);
-  }
+  results.push("");
+  results.push(`Owner ID: ${ownerId}`);
+  results.push(`Personal Agent ID: ${agentId}`);
+  results.push(`Team Agent ID: ${repoAgentId}`);
+  console.log(results.join("\n"));
 }
 main().catch((err) => {
-  console.error("Search failed:", err.message);
+  console.error("Stats error:", err.message);
   process.exit(1);
 });

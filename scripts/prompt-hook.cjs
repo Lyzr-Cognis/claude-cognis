@@ -3,6 +3,33 @@ var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 
+// src/lib/stdin.js
+var require_stdin = __commonJS({
+  "src/lib/stdin.js"(exports2, module2) {
+    function readStdin2() {
+      return new Promise((resolve, reject) => {
+        let data = "";
+        process.stdin.setEncoding("utf8");
+        process.stdin.on("data", (chunk) => {
+          data += chunk;
+        });
+        process.stdin.on("end", () => {
+          try {
+            resolve(JSON.parse(data));
+          } catch {
+            resolve({});
+          }
+        });
+        process.stdin.on("error", reject);
+      });
+    }
+    function writeOutput2(obj) {
+      console.log(JSON.stringify(obj));
+    }
+    module2.exports = { readStdin: readStdin2, writeOutput: writeOutput2 };
+  }
+});
+
 // src/lib/git-utils.js
 var require_git_utils = __commonJS({
   "src/lib/git-utils.js"(exports2, module2) {
@@ -153,7 +180,7 @@ var require_settings = __commonJS({
       if (projConfig.signalKeywords) settings.signalKeywords = projConfig.signalKeywords;
       return settings;
     }
-    function isPrivateSession() {
+    function isPrivateSession2() {
       const val = process.env.COGNIS_PRIVATE;
       return val !== void 0 && val.toLowerCase() === "true";
     }
@@ -165,7 +192,7 @@ var require_settings = __commonJS({
       saveSettings,
       getApiKey: getApiKey2,
       loadMergedSettings: loadMergedSettings2,
-      isPrivateSession
+      isPrivateSession: isPrivateSession2
     };
   }
 });
@@ -430,124 +457,72 @@ var require_scoping = __commonJS({
   }
 });
 
-// src/lib/format-context.js
-var require_format_context = __commonJS({
-  "src/lib/format-context.js"(exports2, module2) {
-    function formatMemoryResults(memories, label) {
-      if (!memories || !memories.length) return "";
-      const items = memories.map((m, i) => {
-        const content = m.memory || m.content || m.text || JSON.stringify(m);
-        return `${i + 1}. ${content}`;
-      }).join("\n");
-      return `### ${label}
-${items}`;
-    }
-    function formatContext(personalMemories, teamMemories, projectName) {
-      const sections = [];
-      if (personalMemories && personalMemories.length) {
-        sections.push(formatMemoryResults(personalMemories, "Your Previous Work"));
-      }
-      if (teamMemories && teamMemories.length) {
-        sections.push(formatMemoryResults(teamMemories, "Team Knowledge"));
-      }
-      if (!sections.length) {
-        return `<cognis-context>
-No previous memories found for project "${projectName}". This appears to be a new session.
-</cognis-context>`;
-      }
-      return `<cognis-context>
-## Memories for "${projectName}"
-
-${sections.join("\n\n")}
-
----
-IMPORTANT: These memories were loaded from the user's Cognis memory store at session start. Use them to answer questions about the user (name, role, preferences, past work) WITHOUT making additional tool calls. Only use search_memories or other MCP tools if the user explicitly asks for something not covered here.
-</cognis-context>`;
-    }
-    function formatSearchResults2(results, query) {
-      if (!results || !results.length) {
-        return `No memories found for query: "${query}"`;
-      }
-      const items = results.map((m, i) => {
-        const content = m.memory || m.content || m.text || JSON.stringify(m);
-        const score = m.score ? ` (relevance: ${(m.score * 100).toFixed(0)}%)` : "";
-        return `${i + 1}. ${content}${score}`;
-      }).join("\n");
-      return `Found ${results.length} memories for "${query}":
-
-${items}`;
-    }
-    module2.exports = { formatContext, formatSearchResults: formatSearchResults2, formatMemoryResults };
-  }
-});
-
-// src/search-memory.js
-var { loadMergedSettings, getApiKey } = require_settings();
+// src/prompt-hook.js
+var { readStdin, writeOutput } = require_stdin();
+var { loadMergedSettings, getApiKey, isPrivateSession } = require_settings();
 var { CognisClient } = require_cognis_client();
 var { getOwnerId, getAgentId, getRepoAgentId } = require_scoping();
-var { formatSearchResults } = require_format_context();
+var SKIP_PATTERNS = [
+  /^(yes|no|y|n|ok|okay|sure|thanks|thank you|continue|go ahead|do it|looks good|lgtm|👍)$/i,
+  /^\//,
+  // slash commands
+  /^!/
+  // shell commands
+];
+var MIN_PROMPT_LENGTH = 20;
 async function main() {
-  const args = process.argv.slice(2);
-  let mode = "both";
-  let query = "";
-  for (const arg of args) {
-    if (arg === "--user") mode = "user";
-    else if (arg === "--repo") mode = "repo";
-    else if (arg === "--both") mode = "both";
-    else query += (query ? " " : "") + arg;
+  const input = await readStdin();
+  const cwd = input.cwd || process.cwd();
+  const prompt = input.prompt || "";
+  if (!prompt || prompt.length < MIN_PROMPT_LENGTH) return;
+  for (const pattern of SKIP_PATTERNS) {
+    if (pattern.test(prompt.trim())) return;
   }
-  if (!query) {
-    console.error("Usage: search-memory [--user|--repo|--both] <query>");
-    process.exit(1);
-  }
-  const cwd = process.cwd();
   const settings = loadMergedSettings(cwd);
   const apiKey = getApiKey(settings, cwd);
-  if (!apiKey) {
-    console.error(
-      "No API key configured. Run /claude-cognis:project-config or set LYZR_API_KEY."
-    );
-    process.exit(1);
-  }
+  if (!apiKey || isPrivateSession()) return;
   const client = new CognisClient(apiKey);
   const ownerId = getOwnerId(settings);
   const agentId = getAgentId(cwd, settings);
   const repoAgentId = getRepoAgentId(cwd, settings);
-  const limit = settings.maxMemoryItems || 5;
-  const results = [];
-  if (mode === "user" || mode === "both") {
-    try {
-      const res = await client.search(query, { ownerId, agentId, limit });
-      const memories = res.memories || res.results || res.data || [];
-      if (Array.isArray(memories) && memories.length) {
-        results.push(`## Personal Memories
-${formatSearchResults(memories, query)}`);
+  const query = prompt.slice(0, 150);
+  try {
+    const [personalRes, teamRes] = await Promise.allSettled([
+      client.search(query, { ownerId, agentId, limit: 2 }),
+      client.search(query, { agentId: repoAgentId, limit: 2 })
+    ]);
+    const memories = [];
+    const extractMemories = (result) => {
+      if (result.status !== "fulfilled") return;
+      const data = result.value;
+      const items = data.memories || data.results || data.data || [];
+      if (!Array.isArray(items)) return;
+      for (const m of items) {
+        const content = m.content || m.memory || m.text || "";
+        const score = m.score || m.relevance || 0;
+        if (content && score > 0.5) {
+          memories.push(content.length > 200 ? `${content.slice(0, 197)}...` : content);
+        }
       }
-    } catch (err) {
-      results.push(`## Personal Memories
-Error: ${err.message}`);
-    }
-  }
-  if (mode === "repo" || mode === "both") {
-    try {
-      const res = await client.search(query, { agentId: repoAgentId, limit });
-      const memories = res.memories || res.results || res.data || [];
-      if (Array.isArray(memories) && memories.length) {
-        results.push(`## Team Memories
-${formatSearchResults(memories, query)}`);
+    };
+    extractMemories(personalRes);
+    extractMemories(teamRes);
+    if (memories.length === 0) return;
+    const unique = [...new Set(memories)].slice(0, 3);
+    const context = [
+      "<cognis-context>",
+      "Relevant memories for this task:",
+      ...unique.map((m) => `- ${m}`),
+      "</cognis-context>"
+    ].join("\n");
+    writeOutput({
+      hookSpecificOutput: {
+        hookEventName: "UserPromptSubmit",
+        additionalContext: context
       }
-    } catch (err) {
-      results.push(`## Team Memories
-Error: ${err.message}`);
-    }
-  }
-  if (results.length) {
-    console.log(results.join("\n\n"));
-  } else {
-    console.log(`No memories found for: "${query}"`);
+    });
+  } catch {
   }
 }
-main().catch((err) => {
-  console.error("Search failed:", err.message);
-  process.exit(1);
+main().catch(() => {
 });

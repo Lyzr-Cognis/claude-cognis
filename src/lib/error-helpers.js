@@ -5,7 +5,7 @@
 function mapHttpError(status, body) {
 	switch (status) {
 		case 401:
-			return "Authentication failed — check your LYZR_API_KEY or settings.json apiKey.";
+			return "Authentication failed — run /claude-cognis:project-config to re-configure, or check your LYZR_API_KEY.";
 		case 403:
 			return "Access denied — your API key may not have permissions for this resource.";
 		case 404:

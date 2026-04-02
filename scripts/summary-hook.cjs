@@ -137,7 +137,12 @@ var require_settings = __commonJS({
         "note",
         "todo",
         "caveat",
-        "workaround"
+        "workaround",
+        "implementation",
+        "refactor",
+        "solution",
+        "design",
+        "tradeoff"
       ],
       signalTurnsBefore: 3
     };
@@ -198,7 +203,7 @@ var require_error_helpers = __commonJS({
     function mapHttpError(status, body) {
       switch (status) {
         case 401:
-          return "Authentication failed \u2014 check your LYZR_API_KEY or settings.json apiKey.";
+          return "Authentication failed \u2014 run /claude-cognis:project-config to re-configure, or check your LYZR_API_KEY.";
         case 403:
           return "Access denied \u2014 your API key may not have permissions for this resource.";
         case 404:
@@ -234,7 +239,10 @@ var require_cognis_client = __commonJS({
     var CognisClient2 = class {
       constructor(apiKey, baseUrl) {
         if (!apiKey) throw new Error("CognisClient requires an API key");
-        this.apiKey = apiKey;
+        if (typeof apiKey !== "string" || apiKey.trim().length < 8) {
+          throw new Error("Invalid API key format \u2014 key must be at least 8 characters");
+        }
+        this.apiKey = apiKey.trim();
         this.baseUrl = (baseUrl || process.env.COGNIS_API_URL || DEFAULT_BASE_URL).replace(
           /\/$/,
           ""
@@ -452,24 +460,89 @@ var require_scoping = __commonJS({
 // src/lib/compress.js
 var require_compress = __commonJS({
   "src/lib/compress.js"(exports2, module2) {
-    var MAX_TOOL_RESULT_LENGTH = 2e3;
-    function compressToolResult(content) {
-      if (!content || typeof content !== "string") return content;
-      if (content.length <= MAX_TOOL_RESULT_LENGTH) return content;
-      return `${content.slice(0, MAX_TOOL_RESULT_LENGTH)}
-... [truncated ${content.length - MAX_TOOL_RESULT_LENGTH} chars]`;
+    var MAX_TOOL_RESULT_LENGTH = 500;
+    var MAX_OUTPUT_PREVIEW = 200;
+    function compressToolUse(toolName, toolInput, toolResult) {
+      if (!toolResult || typeof toolResult !== "string") return toolResult || "";
+      const input = toolInput || {};
+      switch (toolName) {
+        case "Edit":
+        case "MultiEdit": {
+          const file = input.file_path || "file";
+          const old = input.old_string ? truncate(input.old_string, 60) : "";
+          const nw = input.new_string ? truncate(input.new_string, 60) : "";
+          if (old && nw) return `Edited ${file}: "${old}" \u2192 "${nw}"`;
+          return `Edited ${file}`;
+        }
+        case "Write": {
+          const file = input.file_path || "file";
+          const lines = (input.content || "").split("\n").length;
+          return `Wrote ${file} (${lines} lines)`;
+        }
+        case "Read": {
+          const file = input.file_path || "file";
+          const lines = toolResult.split("\n").length;
+          return `Read ${file} (${lines} lines)`;
+        }
+        case "Bash": {
+          const cmd = input.command ? truncate(input.command, 120) : "command";
+          const preview = truncate(toolResult, MAX_OUTPUT_PREVIEW);
+          return `Ran: ${cmd}
+${preview}`;
+        }
+        case "Glob": {
+          const pattern = input.pattern || "pattern";
+          const files = toolResult.split("\n").filter((l) => l.trim());
+          return `Found ${files.length} files matching "${pattern}"`;
+        }
+        case "Grep": {
+          const pattern = input.pattern || "pattern";
+          const matches = toolResult.split("\n").filter((l) => l.trim());
+          return `Searched for "${pattern}": ${matches.length} matches`;
+        }
+        case "Agent": {
+          const desc = input.description || "task";
+          const summary = truncate(toolResult, MAX_OUTPUT_PREVIEW);
+          return `Agent (${desc}): ${summary}`;
+        }
+        case "TaskCreate":
+        case "TaskUpdate":
+        case "TaskList":
+        case "TaskGet":
+          return truncate(toolResult, MAX_OUTPUT_PREVIEW);
+        case "WebFetch":
+        case "WebSearch": {
+          const url = input.url || input.query || "";
+          return `${toolName}: ${url}
+${truncate(toolResult, MAX_OUTPUT_PREVIEW)}`;
+        }
+        default:
+          return truncate(toolResult, MAX_TOOL_RESULT_LENGTH);
+      }
     }
-    function compressMessage(message) {
+    function compressMessage(message, toolMeta) {
       if (!message || !message.content) return message;
       if (typeof message.content === "string") {
-        return { ...message, content: compressToolResult(message.content) };
+        if (toolMeta) {
+          return {
+            ...message,
+            content: compressToolUse(toolMeta.toolName, toolMeta.toolInput, message.content)
+          };
+        }
+        return {
+          ...message,
+          content: truncate(message.content, MAX_TOOL_RESULT_LENGTH)
+        };
       }
       if (Array.isArray(message.content)) {
         return {
           ...message,
           content: message.content.map((block) => {
             if (block.type === "tool_result" && typeof block.content === "string") {
-              return { ...block, content: compressToolResult(block.content) };
+              return {
+                ...block,
+                content: truncate(block.content, MAX_TOOL_RESULT_LENGTH)
+              };
             }
             return block;
           })
@@ -477,7 +550,12 @@ var require_compress = __commonJS({
       }
       return message;
     }
-    module2.exports = { compressToolResult, compressMessage, MAX_TOOL_RESULT_LENGTH };
+    function truncate(str, max) {
+      if (!str || typeof str !== "string") return str || "";
+      if (str.length <= max) return str;
+      return `${str.slice(0, max)}... [+${str.length - max} chars]`;
+    }
+    module2.exports = { compressToolUse, compressMessage, truncate, MAX_TOOL_RESULT_LENGTH };
   }
 });
 
@@ -485,7 +563,7 @@ var require_compress = __commonJS({
 var require_transcript_formatter = __commonJS({
   "src/lib/transcript-formatter.js"(exports2, module2) {
     var fs = require("fs");
-    var { compressMessage } = require_compress();
+    var { compressMessage, compressToolUse } = require_compress();
     function parseTranscript2(transcriptPath) {
       if (!transcriptPath || !fs.existsSync(transcriptPath)) return [];
       const raw = fs.readFileSync(transcriptPath, "utf8");
@@ -541,8 +619,36 @@ var require_transcript_formatter = __commonJS({
         processed = extractSignalTurns(processed, signalKeywords, signalTurnsBefore);
       }
       const formatted = [];
+      const pendingTools = /* @__PURE__ */ new Map();
       for (const msg of processed) {
-        const compressed = compressMessage(msg);
+        if (msg.role === "assistant" && Array.isArray(msg.content)) {
+          for (const block of msg.content) {
+            if (block.type === "tool_use" && block.id) {
+              pendingTools.set(block.id, {
+                toolName: block.name || "Unknown",
+                toolInput: block.input || {}
+              });
+            }
+          }
+        }
+        let compressed;
+        if (msg.role === "user" && Array.isArray(msg.content)) {
+          const newContent = msg.content.map((block) => {
+            if (block.type === "tool_result" && block.tool_use_id) {
+              const meta = pendingTools.get(block.tool_use_id);
+              if (meta && typeof block.content === "string") {
+                return {
+                  ...block,
+                  content: compressToolUse(meta.toolName, meta.toolInput, block.content)
+                };
+              }
+            }
+            return block;
+          });
+          compressed = { ...msg, content: newContent };
+        } else {
+          compressed = compressMessage(msg);
+        }
         let text = getMessageText(compressed);
         if (!text) continue;
         text = cleanCognisTags(text);

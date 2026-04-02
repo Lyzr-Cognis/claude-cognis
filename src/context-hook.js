@@ -22,7 +22,7 @@ async function main() {
 			hookSpecificOutput: {
 				hookEventName: "SessionStart",
 				additionalContext:
-					"<cognis-context>\nCognis memory not configured. Set LYZR_API_KEY environment variable or run /claude-cognis:project-config to configure.\n</cognis-context>",
+					"<cognis-context>\nCognis memory not configured. Run /claude-cognis:project-config to configure, or set LYZR_API_KEY.\n</cognis-context>",
 			},
 		});
 		return;

@@ -1,0 +1,153 @@
+<svg width="1200" height="700" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="700" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0D0D0D"/>
+      <stop offset="100%" stop-color="#1A1510"/>
+    </linearGradient>
+    <radialGradient id="center-glow" cx="600" cy="350" r="350" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E8913A" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#E8913A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="700" rx="16" fill="url(#bg)"/>
+  <rect width="1200" height="700" rx="16" fill="url(#center-glow)"/>
+
+  <!-- Title -->
+  <text x="600" y="45" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF" text-anchor="middle">Cognis Architecture</text>
+  <text x="600" y="68" font-family="system-ui, sans-serif" font-size="12" fill="#666" text-anchor="middle">How memory flows through your Claude Code sessions</text>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Layer 1: Claude Code (top)              -->
+  <!-- ═══════════════════════════════════════ -->
+  <rect x="60" y="100" width="1080" height="80" rx="12" fill="#1A1A1A" stroke="#2A2A2A" stroke-width="1"/>
+  <text x="100" y="128" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">Claude Code</text>
+  <text x="100" y="148" font-family="system-ui, sans-serif" font-size="11" fill="#777">User sessions, prompts, tool calls, and conversations</text>
+
+  <!-- Session lifecycle pills -->
+  <rect x="520" y="112" width="100" height="24" rx="12" fill="#E8913A" fill-opacity="0.15" stroke="#E8913A" stroke-width="0.5" stroke-opacity="0.3"/>
+  <text x="570" y="128" font-family="'SF Mono', monospace" font-size="10" fill="#E8913A" text-anchor="middle">SessionStart</text>
+
+  <rect x="636" y="112" width="130" height="24" rx="12" fill="#E8913A" fill-opacity="0.15" stroke="#E8913A" stroke-width="0.5" stroke-opacity="0.3"/>
+  <text x="701" y="128" font-family="'SF Mono', monospace" font-size="10" fill="#E8913A" text-anchor="middle">UserPromptSubmit</text>
+
+  <rect x="782" y="112" width="60" height="24" rx="12" fill="#E8913A" fill-opacity="0.15" stroke="#E8913A" stroke-width="0.5" stroke-opacity="0.3"/>
+  <text x="812" y="128" font-family="'SF Mono', monospace" font-size="10" fill="#E8913A" text-anchor="middle">Stop</text>
+
+  <rect x="858" y="112" width="100" height="24" rx="12" fill="#E8913A" fill-opacity="0.15" stroke="#E8913A" stroke-width="0.5" stroke-opacity="0.3"/>
+  <text x="908" y="128" font-family="'SF Mono', monospace" font-size="10" fill="#E8913A" text-anchor="middle">MCP Tools</text>
+
+  <rect x="974" y="112" width="100" height="24" rx="12" fill="#E8913A" fill-opacity="0.15" stroke="#E8913A" stroke-width="0.5" stroke-opacity="0.3"/>
+  <text x="1024" y="128" font-family="'SF Mono', monospace" font-size="10" fill="#E8913A" text-anchor="middle">Commands</text>
+
+  <!-- Arrows down from Layer 1 -->
+  <line x1="250" y1="180" x2="250" y2="220" stroke="#E8913A" stroke-width="1" opacity="0.4"/>
+  <polygon points="246,218 250,226 254,218" fill="#E8913A" opacity="0.4"/>
+  <line x1="600" y1="180" x2="600" y2="220" stroke="#E8913A" stroke-width="1" opacity="0.4"/>
+  <polygon points="596,218 600,226 604,218" fill="#E8913A" opacity="0.4"/>
+  <line x1="950" y1="180" x2="950" y2="220" stroke="#E8913A" stroke-width="1" opacity="0.4"/>
+  <polygon points="946,218 950,226 954,218" fill="#E8913A" opacity="0.4"/>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Layer 2: Cognis Plugin (middle)         -->
+  <!-- ═══════════════════════════════════════ -->
+  <rect x="60" y="230" width="1080" height="220" rx="12" fill="#1A1A1A" stroke="#E8913A" stroke-width="1" stroke-opacity="0.2"/>
+  <text x="100" y="258" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="#E8913A">Cognis Plugin</text>
+
+  <!-- Hook boxes -->
+  <rect x="90" y="278" width="230" height="150" rx="10" fill="#141414" stroke="#2A2A2A" stroke-width="1"/>
+  <text x="110" y="300" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#CCCCCC">Hooks</text>
+  <line x1="110" y1="310" x2="300" y2="310" stroke="#2A2A2A" stroke-width="1"/>
+  <circle cx="110" cy="332" r="3" fill="#E8913A"/>
+  <text x="120" y="336" font-family="'SF Mono', monospace" font-size="11" fill="#888">context-hook.cjs</text>
+  <circle cx="110" cy="358" r="3" fill="#E8913A"/>
+  <text x="120" y="362" font-family="'SF Mono', monospace" font-size="11" fill="#888">prompt-hook.cjs</text>
+  <circle cx="110" cy="384" r="3" fill="#E8913A"/>
+  <text x="120" y="388" font-family="'SF Mono', monospace" font-size="11" fill="#888">summary-hook.cjs</text>
+  <circle cx="110" cy="410" r="3" fill="#E8913A" opacity="0.5"/>
+  <text x="120" y="414" font-family="system-ui, sans-serif" font-size="10" fill="#555">tool-aware compression</text>
+
+  <!-- MCP Server box -->
+  <rect x="350" y="278" width="230" height="150" rx="10" fill="#141414" stroke="#2A2A2A" stroke-width="1"/>
+  <text x="370" y="300" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#CCCCCC">MCP Server</text>
+  <text x="486" y="300" font-family="system-ui, sans-serif" font-size="10" fill="#555">8 tools</text>
+  <line x1="370" y1="310" x2="560" y2="310" stroke="#2A2A2A" stroke-width="1"/>
+  <text x="370" y="332" font-family="'SF Mono', monospace" font-size="10" fill="#E8913A">add_memory</text>
+  <text x="480" y="332" font-family="'SF Mono', monospace" font-size="10" fill="#E8913A">search_memories</text>
+  <text x="370" y="352" font-family="'SF Mono', monospace" font-size="10" fill="#E8913A">get_memories</text>
+  <text x="480" y="352" font-family="'SF Mono', monospace" font-size="10" fill="#E8913A">update_memory</text>
+  <text x="370" y="372" font-family="'SF Mono', monospace" font-size="10" fill="#E8913A">delete_memory</text>
+  <text x="480" y="372" font-family="'SF Mono', monospace" font-size="10" fill="#E8913A">delete_all</text>
+  <text x="370" y="392" font-family="'SF Mono', monospace" font-size="10" fill="#E8913A">get_context</text>
+  <text x="480" y="392" font-family="'SF Mono', monospace" font-size="10" fill="#E8913A">search_summaries</text>
+
+  <!-- Skills + Commands box -->
+  <rect x="610" y="278" width="230" height="150" rx="10" fill="#141414" stroke="#2A2A2A" stroke-width="1"/>
+  <text x="630" y="300" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#CCCCCC">Skills + Commands</text>
+  <line x1="630" y1="310" x2="820" y2="310" stroke="#2A2A2A" stroke-width="1"/>
+  <text x="630" y="332" font-family="system-ui, sans-serif" font-size="11" fill="#CCCCCC">Skills</text>
+  <text x="640" y="352" font-family="'SF Mono', monospace" font-size="10" fill="#888">cognis-search</text>
+  <text x="640" y="372" font-family="'SF Mono', monospace" font-size="10" fill="#888">cognis-save</text>
+  <text x="750" y="332" font-family="system-ui, sans-serif" font-size="11" fill="#CCCCCC">Commands</text>
+  <text x="760" y="352" font-family="'SF Mono', monospace" font-size="10" fill="#888">/index</text>
+  <text x="760" y="372" font-family="'SF Mono', monospace" font-size="10" fill="#888">/resume</text>
+  <text x="760" y="392" font-family="'SF Mono', monospace" font-size="10" fill="#888">/stats</text>
+  <text x="760" y="412" font-family="'SF Mono', monospace" font-size="10" fill="#888">/project-config</text>
+
+  <!-- Config box -->
+  <rect x="870" y="278" width="250" height="150" rx="10" fill="#141414" stroke="#2A2A2A" stroke-width="1"/>
+  <text x="890" y="300" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#CCCCCC">Configuration</text>
+  <line x1="890" y1="310" x2="1100" y2="310" stroke="#2A2A2A" stroke-width="1"/>
+  <text x="890" y="336" font-family="'SF Mono', monospace" font-size="10" fill="#888">LYZR_API_KEY</text>
+  <text x="1020" y="336" font-family="system-ui, sans-serif" font-size="10" fill="#555">env var</text>
+  <text x="890" y="360" font-family="'SF Mono', monospace" font-size="10" fill="#888">~/.cognis-claude/</text>
+  <text x="1020" y="360" font-family="system-ui, sans-serif" font-size="10" fill="#555">global</text>
+  <text x="890" y="384" font-family="'SF Mono', monospace" font-size="10" fill="#888">.claude/.cognis-claude/</text>
+  <text x="1060" y="384" font-family="system-ui, sans-serif" font-size="10" fill="#555">project</text>
+  <text x="890" y="412" font-family="'SF Mono', monospace" font-size="10" fill="#888">COGNIS_PRIVATE=true</text>
+  <text x="1060" y="412" font-family="system-ui, sans-serif" font-size="10" fill="#555">disable</text>
+
+  <!-- Arrows down from Layer 2 -->
+  <line x1="350" y1="450" x2="350" y2="500" stroke="#E8913A" stroke-width="1" opacity="0.4"/>
+  <polygon points="346,498 350,506 354,498" fill="#E8913A" opacity="0.4"/>
+  <line x1="850" y1="450" x2="850" y2="500" stroke="#E8913A" stroke-width="1" opacity="0.4"/>
+  <polygon points="846,498 850,506 854,498" fill="#E8913A" opacity="0.4"/>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Layer 3: Memory Scoping                 -->
+  <!-- ═══════════════════════════════════════ -->
+  <rect x="60" y="510" width="520" height="160" rx="12" fill="#1A1A1A" stroke="#2A2A2A" stroke-width="1"/>
+  <text x="100" y="540" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">Memory Scoping</text>
+
+  <!-- Personal -->
+  <rect x="90" y="558" width="220" height="90" rx="8" fill="#141414" stroke="#E8913A" stroke-width="1" stroke-opacity="0.3"/>
+  <circle cx="110" cy="580" r="5" fill="#E8913A"/>
+  <text x="122" y="584" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#CCCCCC">Personal</text>
+  <text x="110" y="608" font-family="system-ui, sans-serif" font-size="11" fill="#777">Your preferences, debug notes,</text>
+  <text x="110" y="624" font-family="system-ui, sans-serif" font-size="11" fill="#777">session history. Private to you.</text>
+
+  <!-- Team -->
+  <rect x="330" y="558" width="220" height="90" rx="8" fill="#141414" stroke="#E8913A" stroke-width="1" stroke-opacity="0.3"/>
+  <circle cx="350" cy="580" r="5" fill="#D4722A"/>
+  <text x="362" y="584" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#CCCCCC">Team</text>
+  <text x="350" y="608" font-family="system-ui, sans-serif" font-size="11" fill="#777">Architecture decisions, conventions.</text>
+  <text x="350" y="624" font-family="system-ui, sans-serif" font-size="11" fill="#777">Shared across repo contributors.</text>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Layer 3b: Cognis API (right)            -->
+  <!-- ═══════════════════════════════════════ -->
+  <rect x="620" y="510" width="520" height="160" rx="12" fill="#1A1A1A" stroke="#E8913A" stroke-width="1" stroke-opacity="0.3"/>
+  <text x="660" y="540" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="#E8913A">Cognis API</text>
+  <text x="790" y="540" font-family="system-ui, sans-serif" font-size="11" fill="#555">memory.studio.lyzr.ai</text>
+
+  <text x="660" y="574" font-family="'SF Mono', monospace" font-size="10" fill="#888">POST /v1/memories</text>
+  <text x="860" y="574" font-family="system-ui, sans-serif" font-size="10" fill="#555">store memories</text>
+  <text x="660" y="596" font-family="'SF Mono', monospace" font-size="10" fill="#888">POST /v1/memories/search</text>
+  <text x="860" y="596" font-family="system-ui, sans-serif" font-size="10" fill="#555">semantic search</text>
+  <text x="660" y="618" font-family="'SF Mono', monospace" font-size="10" fill="#888">POST /v1/memories/summaries</text>
+  <text x="880" y="618" font-family="system-ui, sans-serif" font-size="10" fill="#555">session summaries</text>
+  <text x="660" y="640" font-family="'SF Mono', monospace" font-size="10" fill="#888">POST /v1/memories/context</text>
+  <text x="870" y="640" font-family="system-ui, sans-serif" font-size="10" fill="#555">smart assembly</text>
+
+</svg>

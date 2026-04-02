@@ -1,199 +1,158 @@
 <svg width="1200" height="600" viewBox="0 0 1200 600" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="hero-bg" x1="409" y1="16" x2="790" y2="294" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#5E403E"/>
-      <stop offset="100%" stop-color="#8A6560"/>
+    <linearGradient id="bg-grad" x1="0" y1="0" x2="1200" y2="600" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0D0D0D"/>
+      <stop offset="100%" stop-color="#1A1510"/>
     </linearGradient>
+    <linearGradient id="glow-line" x1="0" y1="0" x2="1200" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E8913A" stop-opacity="0"/>
+      <stop offset="30%" stop-color="#E8913A" stop-opacity="0.8"/>
+      <stop offset="70%" stop-color="#D4722A" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#E8913A" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="card-bg" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#1A1A1A"/>
+      <stop offset="100%" stop-color="#141414"/>
+    </linearGradient>
+    <radialGradient id="orange-glow" cx="600" cy="300" r="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E8913A" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#E8913A" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
 
   <!-- Background -->
-  <rect width="1200" height="600" rx="16" fill="#F5F0ED"/>
+  <rect width="1200" height="600" rx="16" fill="url(#bg-grad)"/>
+  <rect width="1200" height="600" rx="16" fill="url(#orange-glow)"/>
 
-  <!-- ══════════════════════════════════════════════════ -->
-  <!-- Card 1: Automatic Context (top-left)               -->
-  <!-- ══════════════════════════════════════════════════ -->
-  <rect x="16" y="16" width="381" height="278" rx="12" fill="#FFFFFF" stroke="#E8E0DC" stroke-width="1"/>
-
-  <text x="36" y="50" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="18" font-weight="700" fill="#27272A">Automatic Context</text>
-  <text x="36" y="70" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="12" fill="#8A7A7E">Relevant memories loaded every session</text>
-
-  <!-- SessionStart pill -->
-  <rect x="36" y="88" width="116" height="24" rx="6" fill="#F0E8E4"/>
-  <text x="50" y="104" font-family="'SF Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace" font-size="11" fill="#5E403E">SessionStart</text>
-
-  <!-- Arrow down -->
-  <line x1="94" y1="116" x2="94" y2="128" stroke="#BA998C" stroke-width="1.5"/>
-  <polygon points="89,128 94,135 99,128" fill="#BA998C"/>
-
-  <!-- Memory items with fade -->
-  <circle cx="48" cy="156" r="3.5" fill="#BA998C"/>
-  <text x="60" y="160" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#5A5A5E">User prefers TypeScript over JS</text>
-
-  <circle cx="48" cy="184" r="3.5" fill="#BA998C"/>
-  <text x="60" y="188" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#5A5A5E">Auth uses JWT with refresh tokens</text>
-
-  <circle cx="48" cy="212" r="3.5" fill="#BA998C"/>
-  <text x="60" y="216" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#5A5A5E">API follows REST conventions</text>
-
-  <circle cx="48" cy="240" r="3.5" fill="#BA998C" opacity="0.45"/>
-  <text x="60" y="244" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#5A5A5E" opacity="0.45">Rate limiting uses sliding window</text>
-
-  <circle cx="48" cy="268" r="3.5" fill="#BA998C" opacity="0.2"/>
-  <text x="60" y="272" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#5A5A5E" opacity="0.2">Database migrations use Prisma</text>
-
-  <!-- ══════════════════════════════════════════════════ -->
-  <!-- Card 2: Hero (top-center)                          -->
-  <!-- ══════════════════════════════════════════════════ -->
-  <rect x="409" y="16" width="381" height="278" rx="12" fill="url(#hero-bg)"/>
-
-  <!-- Cognis Logomark (scaled ~52px) -->
-  <g transform="translate(530, 58) scale(0.055)">
-    <path d="M539.119 629.56C556.509 629.56 570.601 643.652 570.601 661.042V710.746C570.601 719.108 573.932 727.103 579.828 733L585.192 738.364C591.089 744.26 599.117 747.592 607.446 747.592H637.428C654.818 747.592 668.91 761.683 668.91 779.073V912.862C668.91 930.251 654.818 944.343 637.428 944.343H582.327C564.937 944.343 550.845 930.251 550.845 912.862V783.837C550.845 775.475 547.514 767.48 541.617 761.583L536.854 756.82C530.957 750.923 522.928 747.592 514.6 747.592H429.55C421.188 747.592 413.192 750.923 407.296 756.82L402.699 761.417C396.802 767.313 393.471 775.342 393.471 783.67V912.862C393.471 930.251 379.379 944.343 361.989 944.343H306.888C289.498 944.343 275.406 930.251 275.406 912.862V779.073C275.406 761.683 289.498 747.592 306.888 747.592H336.67C345.032 747.592 353.028 744.26 358.924 738.364L364.554 732.734C370.451 726.837 373.782 718.808 373.782 710.48V661.009C373.782 643.619 387.874 629.527 405.264 629.527H539.119V629.56Z" fill="#BA998C"/>
-    <path d="M165.27 275.41C182.66 275.41 196.752 289.502 196.752 306.892V336.674C196.752 345.036 200.083 353.031 205.98 358.928L211.61 364.558C217.506 370.455 225.535 373.786 233.863 373.786H283.301C300.691 373.786 314.783 387.878 314.783 405.268V539.123C314.783 556.513 300.691 570.604 283.301 570.604H233.597C225.235 570.604 217.24 573.936 211.343 579.832L205.946 585.229C200.05 591.126 196.718 599.154 196.718 607.483V637.432C196.718 654.822 182.627 668.914 165.237 668.914H31.4816C14.0918 668.914 0 654.822 0 637.432V582.331C0 564.941 14.0918 550.849 31.4816 550.849H160.506C168.868 550.849 176.863 547.518 182.76 541.621L187.524 536.857C193.42 530.961 196.752 522.932 196.752 514.604V429.52C196.752 421.158 193.42 413.163 187.524 407.266L182.96 402.702C177.063 396.806 169.035 393.474 160.706 393.474H31.4816C14.0918 393.474 0 379.383 0 361.993V306.892C0 289.502 14.0918 275.41 31.4816 275.41H165.27Z" fill="#BA998C"/>
-    <path d="M912.834 275.41C930.223 275.41 944.315 289.502 944.315 306.892V361.993C944.315 379.383 930.223 393.474 912.834 393.474H783.609C775.247 393.474 767.252 396.806 761.355 402.702L756.791 407.266C750.895 413.163 747.563 421.192 747.563 429.52V514.604C747.563 522.966 750.895 530.961 756.791 536.857L761.555 541.621C767.452 547.518 775.48 550.849 783.809 550.849H912.834C930.223 550.849 944.315 564.941 944.315 582.331V637.432C944.315 654.822 930.223 668.914 912.834 668.914H779.045C761.655 668.914 747.563 654.822 747.563 637.432V607.483C747.563 599.121 744.232 591.126 738.335 585.229L732.939 579.832C727.042 573.936 719.013 570.604 710.685 570.604H660.981C643.591 570.604 629.499 556.513 629.499 539.123V405.268C629.499 387.878 643.591 373.786 660.981 373.786H710.418C718.78 373.786 726.775 370.455 732.672 364.558L738.302 358.928C744.199 353.031 747.53 345.003 747.53 336.674V306.892C747.53 289.502 761.622 275.41 779.012 275.41H912.8H912.834Z" fill="#BA998C"/>
-    <path d="M539.052 373.816C556.442 373.816 570.534 387.908 570.534 405.298V539.086C570.534 556.476 556.442 570.568 539.052 570.568H405.264C387.874 570.568 373.782 556.476 373.782 539.086V405.298C373.782 387.908 387.874 373.816 405.264 373.816H539.052Z" fill="#BA998C"/>
-    <path d="M361.989 0C379.379 0 393.471 14.0916 393.471 31.4815V160.673C393.471 169.035 396.802 177.03 402.698 182.926L407.296 187.524C413.192 193.42 421.221 196.752 429.549 196.752H514.6C522.962 196.752 530.957 193.42 536.853 187.524L541.651 182.726C547.547 176.83 550.879 168.801 550.879 160.473V31.4815C550.879 14.0916 564.97 0 582.36 0H637.461C654.851 0 668.943 14.0916 668.943 31.4815V165.27C668.943 182.66 654.851 196.752 637.461 196.752H607.479C599.117 196.752 591.122 200.083 585.225 205.98L579.862 211.343C573.965 217.24 570.634 225.268 570.634 233.597V283.301C570.634 300.691 556.542 314.783 539.152 314.783H405.297C387.907 314.783 373.815 300.691 373.815 283.301V233.863C373.815 225.502 370.484 217.506 364.587 211.61L358.957 205.98C353.061 200.083 345.032 196.752 336.704 196.752H306.921C289.531 196.752 275.439 182.66 275.439 165.27V31.4815C275.439 14.0916 289.531 0 306.921 0H362.022H361.989Z" fill="#BA998C"/>
+  <!-- Subtle grid pattern -->
+  <g opacity="0.04">
+    <line x1="0" y1="100" x2="1200" y2="100" stroke="#E8913A" stroke-width="0.5"/>
+    <line x1="0" y1="200" x2="1200" y2="200" stroke="#E8913A" stroke-width="0.5"/>
+    <line x1="0" y1="300" x2="1200" y2="300" stroke="#E8913A" stroke-width="0.5"/>
+    <line x1="0" y1="400" x2="1200" y2="400" stroke="#E8913A" stroke-width="0.5"/>
+    <line x1="0" y1="500" x2="1200" y2="500" stroke="#E8913A" stroke-width="0.5"/>
+    <line x1="200" y1="0" x2="200" y2="600" stroke="#E8913A" stroke-width="0.5"/>
+    <line x1="400" y1="0" x2="400" y2="600" stroke="#E8913A" stroke-width="0.5"/>
+    <line x1="600" y1="0" x2="600" y2="600" stroke="#E8913A" stroke-width="0.5"/>
+    <line x1="800" y1="0" x2="800" y2="600" stroke="#E8913A" stroke-width="0.5"/>
+    <line x1="1000" y1="0" x2="1000" y2="600" stroke="#E8913A" stroke-width="0.5"/>
   </g>
 
-  <!-- "x" connector -->
-  <text x="594" y="92" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="20" fill="#9A7A76" text-anchor="middle">x</text>
+  <!-- Glowing horizontal line -->
+  <rect x="0" y="298" width="1200" height="4" rx="2" fill="url(#glow-line)" filter="url(#glow)"/>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Hero Section (top)                      -->
+  <!-- ═══════════════════════════════════════ -->
+
+  <!-- Cognis logomark (simplified) -->
+  <g transform="translate(520, 50) scale(0.04)" opacity="0.9">
+    <path d="M539.119 629.56C556.509 629.56 570.601 643.652 570.601 661.042V710.746C570.601 719.108 573.932 727.103 579.828 733L585.192 738.364C591.089 744.26 599.117 747.592 607.446 747.592H637.428C654.818 747.592 668.91 761.683 668.91 779.073V912.862C668.91 930.251 654.818 944.343 637.428 944.343H582.327C564.937 944.343 550.845 930.251 550.845 912.862V783.837C550.845 775.475 547.514 767.48 541.617 761.583L536.854 756.82C530.957 750.923 522.928 747.592 514.6 747.592H429.55C421.188 747.592 413.192 750.923 407.296 756.82L402.699 761.417C396.802 767.313 393.471 775.342 393.471 783.67V912.862C393.471 930.251 379.379 944.343 361.989 944.343H306.888C289.498 944.343 275.406 930.251 275.406 912.862V779.073C275.406 761.683 289.498 747.592 306.888 747.592H336.67C345.032 747.592 353.028 744.26 358.924 738.364L364.554 732.734C370.451 726.837 373.782 718.808 373.782 710.48V661.009C373.782 643.619 387.874 629.527 405.264 629.527H539.119V629.56Z" fill="#E8913A"/>
+    <path d="M165.27 275.41C182.66 275.41 196.752 289.502 196.752 306.892V336.674C196.752 345.036 200.083 353.031 205.98 358.928L211.61 364.558C217.506 370.455 225.535 373.786 233.863 373.786H283.301C300.691 373.786 314.783 387.878 314.783 405.268V539.123C314.783 556.513 300.691 570.604 283.301 570.604H233.597C225.235 570.604 217.24 573.936 211.343 579.832L205.946 585.229C200.05 591.126 196.718 599.154 196.718 607.483V637.432C196.718 654.822 182.627 668.914 165.237 668.914H31.4816C14.0918 668.914 0 654.822 0 637.432V582.331C0 564.941 14.0918 550.849 31.4816 550.849H160.506C168.868 550.849 176.863 547.518 182.76 541.621L187.524 536.857C193.42 530.961 196.752 522.932 196.752 514.604V429.52C196.752 421.158 193.42 413.163 187.524 407.266L182.96 402.702C177.063 396.806 169.035 393.474 160.706 393.474H31.4816C14.0918 393.474 0 379.383 0 361.993V306.892C0 289.502 14.0918 275.41 31.4816 275.41H165.27Z" fill="#E8913A"/>
+    <path d="M912.834 275.41C930.223 275.41 944.315 289.502 944.315 306.892V361.993C944.315 379.383 930.223 393.474 912.834 393.474H783.609C775.247 393.474 767.252 396.806 761.355 402.702L756.791 407.266C750.895 413.163 747.563 421.192 747.563 429.52V514.604C747.563 522.966 750.895 530.961 756.791 536.857L761.555 541.621C767.452 547.518 775.48 550.849 783.809 550.849H912.834C930.223 550.849 944.315 564.941 944.315 582.331V637.432C944.315 654.822 930.223 668.914 912.834 668.914H779.045C761.655 668.914 747.563 654.822 747.563 637.432V607.483C747.563 599.121 744.232 591.126 738.335 585.229L732.939 579.832C727.042 573.936 719.013 570.604 710.685 570.604H660.981C643.591 570.604 629.499 556.513 629.499 539.123V405.268C629.499 387.878 643.591 373.786 660.981 373.786H710.418C718.78 373.786 726.775 370.455 732.672 364.558L738.302 358.928C744.199 353.031 747.53 345.003 747.53 336.674V306.892C747.53 289.502 761.622 275.41 779.012 275.41H912.8H912.834Z" fill="#E8913A"/>
+    <path d="M539.052 373.816C556.442 373.816 570.534 387.908 570.534 405.298V539.086C570.534 556.476 556.442 570.568 539.052 570.568H405.264C387.874 570.568 373.782 556.476 373.782 539.086V405.298C373.782 387.908 387.874 373.816 405.264 373.816H539.052Z" fill="#E8913A"/>
+    <path d="M361.989 0C379.379 0 393.471 14.0916 393.471 31.4815V160.673C393.471 169.035 396.802 177.03 402.698 182.926L407.296 187.524C413.192 193.42 421.221 196.752 429.549 196.752H514.6C522.962 196.752 530.957 193.42 536.853 187.524L541.651 182.726C547.547 176.83 550.879 168.801 550.879 160.473V31.4815C550.879 14.0916 564.97 0 582.36 0H637.461C654.851 0 668.943 14.0916 668.943 31.4815V165.27C668.943 182.66 654.851 196.752 637.461 196.752H607.479C599.117 196.752 591.122 200.083 585.225 205.98L579.862 211.343C573.965 217.24 570.634 225.268 570.634 233.597V283.301C570.634 300.691 556.542 314.783 539.152 314.783H405.297C387.907 314.783 373.815 300.691 373.815 283.301V233.863C373.815 225.502 370.484 217.506 364.587 211.61L358.957 205.98C353.061 200.083 345.032 196.752 336.704 196.752H306.921C289.531 196.752 275.439 182.66 275.439 165.27V31.4815C275.439 14.0916 289.531 0 306.921 0H362.022H361.989Z" fill="#E8913A"/>
+  </g>
+
+  <!-- x connector -->
+  <text x="572" y="82" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="#666" text-anchor="middle">x</text>
 
   <!-- Terminal icon -->
-  <rect x="607" y="64" width="50" height="40" rx="8" fill="none" stroke="#D4A574" stroke-width="1.5" opacity="0.6"/>
-  <text x="619" y="91" font-family="'SF Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace" font-size="18" font-weight="700" fill="#D4A574">&gt;_</text>
+  <rect x="584" y="56" width="50" height="40" rx="8" fill="none" stroke="#E8913A" stroke-width="1.5" opacity="0.7"/>
+  <text x="596" y="83" font-family="'SF Mono', Menlo, monospace" font-size="18" font-weight="700" fill="#E8913A">&gt;_</text>
 
   <!-- Title -->
-  <text x="599.5" y="148" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="30" font-weight="700" fill="#EFEFEF" text-anchor="middle">Cognis for Claude Code</text>
+  <text x="600" y="140" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="32" font-weight="700" fill="#FFFFFF" text-anchor="middle">Cognis for Claude Code</text>
+  <text x="600" y="168" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="15" fill="#999999" text-anchor="middle">Persistent memory for coding agents</text>
 
-  <!-- Subtitle -->
-  <text x="599.5" y="174" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="15" fill="#CDB8B0" text-anchor="middle">Persistent memory for coding agents</text>
+  <!-- Feature pills row -->
+  <g transform="translate(600, 200)" text-anchor="middle">
+    <rect x="-290" y="-12" width="110" height="26" rx="13" fill="none" stroke="#E8913A" stroke-width="1" opacity="0.5"/>
+    <text x="-235" y="5" font-family="system-ui, sans-serif" font-size="11" fill="#E8913A">Auto Context</text>
+
+    <rect x="-165" y="-12" width="120" height="26" rx="13" fill="none" stroke="#E8913A" stroke-width="1" opacity="0.5"/>
+    <text x="-105" y="5" font-family="system-ui, sans-serif" font-size="11" fill="#E8913A">Mid-Session</text>
+
+    <rect x="-30" y="-12" width="120" height="26" rx="13" fill="none" stroke="#E8913A" stroke-width="1" opacity="0.5"/>
+    <text x="30" y="5" font-family="system-ui, sans-serif" font-size="11" fill="#E8913A">Session Resume</text>
+
+    <rect x="105" y="-12" width="100" height="26" rx="13" fill="none" stroke="#E8913A" stroke-width="1" opacity="0.5"/>
+    <text x="155" y="5" font-family="system-ui, sans-serif" font-size="11" fill="#E8913A">8 MCP Tools</text>
+
+    <rect x="220" y="-12" width="100" height="26" rx="13" fill="none" stroke="#E8913A" stroke-width="1" opacity="0.5"/>
+    <text x="270" y="5" font-family="system-ui, sans-serif" font-size="11" fill="#E8913A">Team Memory</text>
+  </g>
 
   <!-- Powered by -->
-  <text x="772" y="282" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" fill="#9A7A76" text-anchor="end" opacity="0.6">powered by Lyzr</text>
+  <text x="600" y="258" font-family="system-ui, sans-serif" font-size="11" fill="#555" text-anchor="middle">powered by Lyzr</text>
 
-  <!-- ══════════════════════════════════════════════════ -->
-  <!-- Card 3: Session Capture (top-right)                -->
-  <!-- ══════════════════════════════════════════════════ -->
-  <rect x="802" y="16" width="382" height="278" rx="12" fill="#FFFFFF" stroke="#E8E0DC" stroke-width="1"/>
+  <!-- ═══════════════════════════════════════ -->
+  <!-- Architecture Section (bottom)           -->
+  <!-- ═══════════════════════════════════════ -->
 
-  <text x="822" y="50" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="18" font-weight="700" fill="#27272A">Session Capture</text>
-  <text x="822" y="70" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="12" fill="#8A7A7E">Conversations saved automatically</text>
+  <!-- Section label -->
+  <text x="600" y="340" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#666" text-anchor="middle" letter-spacing="2">HOW IT WORKS</text>
 
-  <!-- Flow: Stop → Summarize → Save -->
-  <rect x="838" y="92" width="80" height="28" rx="6" fill="#F0E8E4"/>
-  <text x="878" y="110" font-family="'SF Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace" font-size="11" fill="#5E403E" text-anchor="middle">Stop</text>
+  <!-- Flow: SessionStart → UserPrompt → Stop -->
+  <!-- Card 1: SessionStart -->
+  <rect x="60" y="370" width="200" height="190" rx="12" fill="url(#card-bg)" stroke="#2A2A2A" stroke-width="1"/>
+  <rect x="76" y="388" width="100" height="22" rx="6" fill="#E8913A" fill-opacity="0.15"/>
+  <text x="86" y="403" font-family="'SF Mono', monospace" font-size="11" fill="#E8913A">SessionStart</text>
+  <text x="76" y="434" font-family="system-ui, sans-serif" font-size="12" fill="#CCCCCC">Loads personal +</text>
+  <text x="76" y="452" font-family="system-ui, sans-serif" font-size="12" fill="#CCCCCC">team memories into</text>
+  <text x="76" y="470" font-family="system-ui, sans-serif" font-size="12" fill="#CCCCCC">session context</text>
+  <circle cx="88" cy="510" r="3" fill="#E8913A" opacity="0.6"/>
+  <text x="98" y="514" font-family="system-ui, sans-serif" font-size="10" fill="#777">3 parallel queries</text>
 
-  <line x1="922" y1="106" x2="938" y2="106" stroke="#BA998C" stroke-width="1.5"/>
-  <polygon points="936,101.5 943,106 936,110.5" fill="#BA998C"/>
+  <!-- Arrow 1 -->
+  <line x1="270" y1="465" x2="340" y2="465" stroke="#E8913A" stroke-width="1.5" opacity="0.5"/>
+  <polygon points="338,460 346,465 338,470" fill="#E8913A" opacity="0.5"/>
 
-  <rect x="948" y="92" width="96" height="28" rx="6" fill="#F0E8E4"/>
-  <text x="996" y="110" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#5E403E" text-anchor="middle">Summarize</text>
+  <!-- Card 2: UserPrompt -->
+  <rect x="350" y="370" width="200" height="190" rx="12" fill="url(#card-bg)" stroke="#E8913A" stroke-width="1" stroke-opacity="0.3"/>
+  <rect x="366" y="388" width="130" height="22" rx="6" fill="#E8913A" fill-opacity="0.15"/>
+  <text x="376" y="403" font-family="'SF Mono', monospace" font-size="11" fill="#E8913A">UserPromptSubmit</text>
+  <text x="366" y="434" font-family="system-ui, sans-serif" font-size="12" fill="#CCCCCC">Surfaces relevant</text>
+  <text x="366" y="452" font-family="system-ui, sans-serif" font-size="12" fill="#CCCCCC">memories as you</text>
+  <text x="366" y="470" font-family="system-ui, sans-serif" font-size="12" fill="#CCCCCC">work mid-session</text>
+  <rect x="366" y="496" width="36" height="16" rx="4" fill="#E8913A" fill-opacity="0.2"/>
+  <text x="372" y="508" font-family="system-ui, sans-serif" font-size="9" fill="#E8913A" font-weight="600">NEW</text>
+  <text x="410" y="508" font-family="system-ui, sans-serif" font-size="10" fill="#777">real-time context</text>
 
-  <line x1="1048" y1="106" x2="1064" y2="106" stroke="#BA998C" stroke-width="1.5"/>
-  <polygon points="1062,101.5 1069,106 1062,110.5" fill="#BA998C"/>
+  <!-- Arrow 2 -->
+  <line x1="560" y1="465" x2="630" y2="465" stroke="#E8913A" stroke-width="1.5" opacity="0.5"/>
+  <polygon points="628,460 636,465 628,470" fill="#E8913A" opacity="0.5"/>
 
-  <rect x="1074" y="92" width="80" height="28" rx="6" fill="#F0E8E4"/>
-  <text x="1114" y="110" font-family="'SF Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace" font-size="11" fill="#5E403E" text-anchor="middle">Save</text>
+  <!-- Card 3: Stop -->
+  <rect x="640" y="370" width="200" height="190" rx="12" fill="url(#card-bg)" stroke="#2A2A2A" stroke-width="1"/>
+  <rect x="656" y="388" width="50" height="22" rx="6" fill="#E8913A" fill-opacity="0.15"/>
+  <text x="666" y="403" font-family="'SF Mono', monospace" font-size="11" fill="#E8913A">Stop</text>
+  <text x="656" y="434" font-family="system-ui, sans-serif" font-size="12" fill="#CCCCCC">Compresses transcript</text>
+  <text x="656" y="452" font-family="system-ui, sans-serif" font-size="12" fill="#CCCCCC">with tool-aware logic</text>
+  <text x="656" y="470" font-family="system-ui, sans-serif" font-size="12" fill="#CCCCCC">and saves summary</text>
+  <circle cx="668" cy="510" r="3" fill="#E8913A" opacity="0.6"/>
+  <text x="678" y="514" font-family="system-ui, sans-serif" font-size="10" fill="#777">13 tool compressors</text>
 
-  <!-- Checkmarks -->
-  <polyline points="834,157 839,162 848,152" fill="none" stroke="#5E403E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="858" y="162" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#5A5A5E">Decisions captured</text>
+  <!-- Arrow 3 -->
+  <line x1="850" y1="465" x2="920" y2="465" stroke="#E8913A" stroke-width="1.5" opacity="0.5"/>
+  <polygon points="918,460 926,465 918,470" fill="#E8913A" opacity="0.5"/>
 
-  <polyline points="834,185 839,190 848,180" fill="none" stroke="#5E403E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="858" y="190" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#5A5A5E">Patterns identified</text>
-
-  <polyline points="834,213 839,218 848,208" fill="none" stroke="#5E403E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="858" y="218" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" fill="#5A5A5E">Context preserved</text>
-
-  <!-- ══════════════════════════════════════════════════ -->
-  <!-- Card 4: Personal + Team (bottom-left)              -->
-  <!-- ══════════════════════════════════════════════════ -->
-  <rect x="16" y="306" width="381" height="278" rx="12" fill="#FFFFFF" stroke="#E8E0DC" stroke-width="1"/>
-
-  <text x="36" y="340" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="18" font-weight="700" fill="#27272A">Personal + Team Memory</text>
-  <text x="36" y="360" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="12" fill="#8A7A7E">Private and shared knowledge</text>
-
-  <!-- Personal box -->
-  <rect x="36" y="378" width="166" height="160" rx="8" fill="#FBF7F5" stroke="#E8DFDB" stroke-width="1"/>
-  <circle cx="52" cy="400" r="5" fill="#BA998C"/>
-  <text x="64" y="404" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" fill="#5E403E">Personal</text>
-
-  <text x="52" y="430" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" fill="#5A5A5E">Your preferences</text>
-  <text x="52" y="450" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" fill="#5A5A5E">Debug notes</text>
-  <text x="52" y="470" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" fill="#5A5A5E">Session history</text>
-
-  <text x="52" y="524" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#8A7A7E" font-style="italic">private to you</text>
-
-  <!-- Team box -->
-  <rect x="214" y="378" width="166" height="160" rx="8" fill="#F5F2EF" stroke="#E0D8D4" stroke-width="1"/>
-  <circle cx="230" cy="400" r="5" fill="#5E403E"/>
-  <text x="242" y="404" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" fill="#5E403E">Team</text>
-
-  <text x="230" y="430" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" fill="#5A5A5E">Architecture docs</text>
-  <text x="230" y="450" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" fill="#5A5A5E">Team conventions</text>
-  <text x="230" y="470" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" fill="#5A5A5E">Shared decisions</text>
-
-  <text x="230" y="524" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#8A7A7E" font-style="italic">shared across repo</text>
-
-  <!-- ══════════════════════════════════════════════════ -->
-  <!-- Card 5: Semantic Search (bottom-center)            -->
-  <!-- ══════════════════════════════════════════════════ -->
-  <rect x="409" y="306" width="381" height="278" rx="12" fill="#FFFFFF" stroke="#E8E0DC" stroke-width="1"/>
-
-  <text x="429" y="340" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="18" font-weight="700" fill="#27272A">Semantic Search</text>
-  <text x="429" y="360" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="12" fill="#8A7A7E">Find anything with natural language</text>
-
-  <!-- Search bar -->
-  <rect x="429" y="378" width="341" height="36" rx="8" fill="#F8F4F2" stroke="#DCD4D0" stroke-width="1"/>
-  <!-- Magnifying glass icon -->
-  <circle cx="449" cy="394" r="7" fill="none" stroke="#BA998C" stroke-width="1.5"/>
-  <line x1="454" y1="399" x2="459" y2="404" stroke="#BA998C" stroke-width="1.5" stroke-linecap="round"/>
-  <text x="468" y="400" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#27272A">auth pattern we discussed</text>
-
-  <!-- Search results -->
-  <rect x="429" y="428" width="341" height="30" rx="6" fill="#FBF7F5"/>
-  <circle cx="445" cy="443" r="3" fill="#BA998C"/>
-  <text x="456" y="447" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#5A5A5E">JWT with refresh tokens for API auth</text>
-
-  <rect x="429" y="464" width="341" height="30" rx="6" fill="#FBF7F5"/>
-  <circle cx="445" cy="479" r="3" fill="#5E403E"/>
-  <text x="456" y="483" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#5A5A5E">OAuth 2.0 gateway configuration</text>
-
-  <rect x="429" y="500" width="341" height="30" rx="6" fill="#FBF7F5"/>
-  <circle cx="445" cy="515" r="3" fill="#BA998C"/>
-  <text x="456" y="519" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#5A5A5E">Rate limiting approach for /api/*</text>
-
-  <!-- Scope legend -->
-  <circle cx="445" cy="550" r="3" fill="#BA998C"/>
-  <text x="455" y="553" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#8A7A7E">personal</text>
-  <circle cx="515" cy="550" r="3" fill="#5E403E"/>
-  <text x="525" y="553" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#8A7A7E">team</text>
-
-  <!-- ══════════════════════════════════════════════════ -->
-  <!-- Card 6: MCP Tools - Dark (bottom-right)            -->
-  <!-- ══════════════════════════════════════════════════ -->
-  <rect x="802" y="306" width="382" height="278" rx="12" fill="#1E1E22"/>
-
-  <text x="822" y="340" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="18" font-weight="700" fill="#EFEFEF">8 MCP Tools</text>
-  <text x="822" y="360" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="12" fill="#6A6A6E">Full memory control via MCP</text>
-
-  <!-- Tool names - column 1 -->
-  <text x="832" y="392" font-family="'SF Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace" font-size="12" fill="#D4A574">add_memory</text>
-  <text x="832" y="416" font-family="'SF Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace" font-size="12" fill="#D4A574">get_memories</text>
-  <text x="832" y="440" font-family="'SF Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace" font-size="12" fill="#D4A574">delete_memory</text>
-  <text x="832" y="464" font-family="'SF Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace" font-size="12" fill="#D4A574">get_context</text>
-
-  <!-- Tool names - column 2 -->
-  <text x="976" y="392" font-family="'SF Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace" font-size="12" fill="#D4A574">search_memories</text>
-  <text x="976" y="416" font-family="'SF Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace" font-size="12" fill="#D4A574">update_memory</text>
-  <text x="976" y="440" font-family="'SF Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace" font-size="12" fill="#D4A574">delete_all_memories</text>
-  <text x="976" y="464" font-family="'SF Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace" font-size="12" fill="#D4A574">search_summaries</text>
-
-  <!-- Separator -->
-  <line x1="822" y1="486" x2="1164" y2="486" stroke="#333338" stroke-width="1"/>
-
-  <!-- Config hint -->
-  <text x="832" y="508" font-family="'SF Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace" font-size="11" fill="#555560"># config</text>
-  <text x="832" y="528" font-family="'SF Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace" font-size="11" fill="#888890">~/.cognis-claude/settings.json</text>
+  <!-- Card 4: Commands -->
+  <rect x="930" y="370" width="210" height="190" rx="12" fill="url(#card-bg)" stroke="#2A2A2A" stroke-width="1"/>
+  <rect x="946" y="388" width="80" height="22" rx="6" fill="#E8913A" fill-opacity="0.15"/>
+  <text x="956" y="403" font-family="'SF Mono', monospace" font-size="11" fill="#E8913A">Commands</text>
+  <text x="956" y="434" font-family="'SF Mono', monospace" font-size="11" fill="#777">/index</text>
+  <text x="956" y="454" font-family="'SF Mono', monospace" font-size="11" fill="#777">/resume</text>
+  <rect x="1010" y="442" width="36" height="16" rx="4" fill="#E8913A" fill-opacity="0.2"/>
+  <text x="1016" y="454" font-family="system-ui, sans-serif" font-size="9" fill="#E8913A" font-weight="600">NEW</text>
+  <text x="956" y="474" font-family="'SF Mono', monospace" font-size="11" fill="#777">/stats</text>
+  <rect x="996" y="462" width="36" height="16" rx="4" fill="#E8913A" fill-opacity="0.2"/>
+  <text x="1002" y="474" font-family="system-ui, sans-serif" font-size="9" fill="#E8913A" font-weight="600">NEW</text>
+  <text x="956" y="494" font-family="'SF Mono', monospace" font-size="11" fill="#777">/project-config</text>
+  <text x="956" y="514" font-family="'SF Mono', monospace" font-size="11" fill="#777">/logout</text>
 
 </svg>

@@ -22,6 +22,17 @@
           }
         ]
       }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/prompt-hook.cjs\"",
+            "timeout": 10
+          }
+        ]
+      }
     ]
   }
 }

@@ -37,7 +37,7 @@ async function main() {
 
 	if (!apiKey) {
 		console.error(
-			"No API key configured. Set LYZR_API_KEY environment variable or run /claude-cognis:project-config.",
+			"No API key configured. Run /claude-cognis:project-config or set LYZR_API_KEY.",
 		);
 		process.exit(1);
 	}

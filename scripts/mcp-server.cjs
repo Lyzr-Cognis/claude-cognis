@@ -22089,7 +22089,7 @@ var require_error_helpers = __commonJS({
     function mapHttpError(status, body) {
       switch (status) {
         case 401:
-          return "Authentication failed \u2014 check your LYZR_API_KEY or settings.json apiKey.";
+          return "Authentication failed \u2014 run /claude-cognis:project-config to re-configure, or check your LYZR_API_KEY.";
         case 403:
           return "Access denied \u2014 your API key may not have permissions for this resource.";
         case 404:
@@ -22125,7 +22125,10 @@ var require_cognis_client = __commonJS({
     var CognisClient2 = class {
       constructor(apiKey, baseUrl) {
         if (!apiKey) throw new Error("CognisClient requires an API key");
-        this.apiKey = apiKey;
+        if (typeof apiKey !== "string" || apiKey.trim().length < 8) {
+          throw new Error("Invalid API key format \u2014 key must be at least 8 characters");
+        }
+        this.apiKey = apiKey.trim();
         this.baseUrl = (baseUrl || process.env.COGNIS_API_URL || DEFAULT_BASE_URL).replace(
           /\/$/,
           ""
@@ -22411,7 +22414,12 @@ var require_settings = __commonJS({
         "note",
         "todo",
         "caveat",
-        "workaround"
+        "workaround",
+        "implementation",
+        "refactor",
+        "solution",
+        "design",
+        "tradeoff"
       ],
       signalTurnsBefore: 3
     };
