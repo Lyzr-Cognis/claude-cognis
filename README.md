@@ -18,11 +18,11 @@
 - **Automatic context** — Relevant memories are loaded at the start of every session, so Claude already knows what you've been working on
 - **Mid-session memory** — As you work, relevant memories are surfaced automatically based on what you're asking about
 - **Session capture** — When you end a session, your conversation is automatically summarized and stored with tool-aware compression
-- **Session resume** — Pick up exactly where you left off with `/claude-cognis:resume`
+- **Session recall** — Pick up exactly where you left off with `/claude-cognis:recall`
 - **Personal + team memory** — Your memories are private by default; team knowledge is shared across everyone on the same repo
 - **Semantic search** — Find past decisions, patterns, and context using natural language queries
 - **Codebase indexing** — Analyze and store your project's architecture so Claude understands your codebase from the first message
-- **Memory stats** — See what Cognis has stored with `/claude-cognis:stats`
+- **Memory stats** — See what Cognis has stored with `/claude-cognis:memory-stats`
 - **Smart context assembly** — Cognis intelligently combines short-term and long-term memory to build the most relevant context
 
 ## Quick Start
