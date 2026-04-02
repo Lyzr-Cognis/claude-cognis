@@ -1,5 +1,5 @@
 ---
-name: stats
+name: memory-stats
 description: Show memory statistics — total stored memories, session history, and storage breakdown.
 allowed-tools: ["Bash"]
 ---

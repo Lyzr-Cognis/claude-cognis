@@ -99,8 +99,8 @@ For advanced usage, Cognis exposes 8 tools via the Model Context Protocol.
 | Command | Description |
 |---------|-------------|
 | `/claude-cognis:index` | Analyze and index the current codebase |
-| `/claude-cognis:resume` | Load last session context to pick up where you left off |
-| `/claude-cognis:stats` | Show memory statistics and recent session history |
+| `/claude-cognis:recall` | Recall last session context to pick up where you left off |
+| `/claude-cognis:memory-stats` | Show memory statistics and recent session history |
 | `/claude-cognis:project-config` | Configure per-project settings |
 | `/claude-cognis:logout` | Remove stored API credentials |
 

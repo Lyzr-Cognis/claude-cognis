@@ -1,16 +1,16 @@
 ---
-name: resume
-description: Load context from your last session to pick up where you left off.
+name: recall
+description: Recall context from your last session to pick up where you left off.
 allowed-tools: ["Bash"]
 ---
 
-# Resume Last Session
+# Recall Last Session
 
 Load the summary and key memories from the most recent session so the user can continue where they left off.
 
 ## Steps
 
-1. Run the resume script:
+1. Run the recall script:
 ```bash
 node "${CLAUDE_PLUGIN_ROOT}/scripts/resume-session.cjs"
 ```
